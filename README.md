@@ -27,20 +27,23 @@ One demo of springcloud
 > 主启动类  服务端@EnableCircuitBreaker  客户端@EnableHystrix  
 > 服务类 @HystrixCommand(fallbackMethod = "paymentInfo_TimeoutHandler",commandProperties = {  
 >            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "3000")  
->    })
+>    })  
+>    所有属性在类HystrixPropertiesManager中
 
 ### 服务降级 failback
 > fallback 不让客户端等待并立刻返回一个友好的提示  
 > 1.程序运行异常 2.超时 3.服务熔断触发服务降级 4.线程池/信号量打满  
 > 客户端服务降级（防止服务端出现问题）、服务端服务降级（自查）
 > @HystrixCommand  
-> 全局fallback @DefaultProperties(defaultFallback = "")
+> 全局fallback @DefaultProperties(defaultFallback = "")  
 > 类级别的服务降级  
 > ①@FeignClient(value = "cloud-payment-service",fallback = PaymentFallbackService.class)  
 > 增加属性 fallback   
 > ②PaymentFallbackService 实现PaymentFeignService接口并在其中做具体实现
 
 ### 服务熔断 break
-> 类比保险丝达到最大服务访问后，直接拒绝访问，拉闸限电，然后调用服务降级的方法返回友好提示  
+> 参考博客 martinfowler.com/bliki/CircuitBreaker.html  
+> 类比保险丝达到最大服务访问后，直接拒绝访问，拉闸限电，然后调用服务降级的方法返回友好提示，当检测到该节点微服务调用响应正常后，恢复调用链路
+> 
 ### 服务限流 flowlimit
 > 秒杀高并发等操作，严禁一窝蜂过来拥挤，大家排队，一秒钟N个，有序进行  
