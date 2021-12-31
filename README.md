@@ -24,14 +24,22 @@ One demo of springcloud
 > hystrix（已停更） 服务雪崩  https://github.com/Netflix/Hystrix 官方推荐 resilience4j一般不用
 > 是处理分布式系统的延迟和容错的开源库，在分布式系统里，许多依赖会不可避免的调用失败例如超时、异常等等，hystrix能够保证在一个依赖出问题的情况下，不会导致整体服务失败，避免级联故障，以提高分布式系统的弹性。
 ## 启用
-> 主启动类 @EnableCircuitBreaker  
+> 主启动类  服务端@EnableCircuitBreaker  客户端@EnableHystrix  
 > 服务类 @HystrixCommand(fallbackMethod = "paymentInfo_TimeoutHandler",commandProperties = {  
 >            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "3000")  
 >    })
+
 ### 服务降级 failback
 > fallback 不让客户端等待并立刻返回一个友好的提示  
 > 1.程序运行异常 2.超时 3.服务熔断触发服务降级 4.线程池/信号量打满  
+> 客户端服务降级（防止服务端出现问题）、服务端服务降级（自查）
 > @HystrixCommand  
+> 全局fallback @DefaultProperties(defaultFallback = "")
+> 类级别的服务降级  
+> ①@FeignClient(value = "cloud-payment-service",fallback = PaymentFallbackService.class)  
+> 增加属性 fallback   
+> ②PaymentFallbackService 实现PaymentFeignService接口并在其中做具体实现
+
 ### 服务熔断 break
 > 类比保险丝达到最大服务访问后，直接拒绝访问，拉闸限电，然后调用服务降级的方法返回友好提示  
 ### 服务限流 flowlimit
