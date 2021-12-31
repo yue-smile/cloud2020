@@ -28,7 +28,7 @@ One demo of springcloud
 > 服务类 @HystrixCommand(fallbackMethod = "paymentInfo_TimeoutHandler",commandProperties = {  
 >            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "3000")  
 >    })  
->    所有属性在类HystrixPropertiesManager中
+>    所有属性在类HystrixPropertiesManager  HystrixCommandProperties中
 
 ### 服务降级 failback
 > fallback 不让客户端等待并立刻返回一个友好的提示  
@@ -44,6 +44,11 @@ One demo of springcloud
 ### 服务熔断 break
 > 参考博客 martinfowler.com/bliki/CircuitBreaker.html  
 > 类比保险丝达到最大服务访问后，直接拒绝访问，拉闸限电，然后调用服务降级的方法返回友好提示，当检测到该节点微服务调用响应正常后，恢复调用链路
-> 
+> 服务降级--服务熔断--服务恢复  
+> 断路器开启或关闭的条件  
+>> 当请求数满足一定阀值的时候（默认10秒内请求超过20次）  
+>> 当失败率达到一定阀值的时候（默认10秒内超过50%请求失败）  
+>>>  达到以上阀值时断路器会开启，所有的请求都不会进行转发  
+>> 一段时间后（默认是5秒），断路器会进入半开状态，会转发其中一个请求，如果成功断路器会关闭，放行请求，如果失败则再次打开断路器，5秒之后再尝试
 ### 服务限流 flowlimit
 > 秒杀高并发等操作，严禁一窝蜂过来拥挤，大家排队，一秒钟N个，有序进行  
