@@ -52,3 +52,8 @@ One demo of springcloud
 >> 一段时间后（默认是5秒），断路器会进入半开状态，会转发其中一个请求，如果成功断路器会关闭，放行请求，如果失败则再次打开断路器，5秒之后再尝试
 ### 服务限流 flowlimit
 > 秒杀高并发等操作，严禁一窝蜂过来拥挤，大家排队，一秒钟N个，有序进行  
+> 目前主流用阿里的sentinel
+### 服务监控
+> hystrixDashboard 需要新建一个工程 增加注解@EnableHystrixDashboard   
+> 被监控端需要@EnableCircuitBreaker 另外为了处理兼容性问题需要覆盖一个实例 ServletRegistrationBean  
+> 监控地址是 http://127.0.0.1:8001/hystrix.stream 七色一圈一线 七色代表七种状态 一圈代表流量及状态  
