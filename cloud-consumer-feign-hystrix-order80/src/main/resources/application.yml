@@ -11,6 +11,7 @@ eureka:
     service-url:
     #设置与eurekaServer交互的地址 查询服务和注册服务都依赖这个地址  启动时需要7001和7002已经启动
       defaultZone: http://eureka7003.com:7003/eureka/
+
 #设置feign客户端超时时间（openfeign默认包含ribbon）
 ribbon:
   #指的是建立连接所用的时间，适用于网络状况正常情况下，两端连接所用的时间
@@ -22,3 +23,7 @@ logging:
   level:
     #feign日志以什么级别监控哪个接口
     com.wangyue.springcloud.service.PaymentFeignService: debug
+
+feign:
+  hystrix:
+    enabled: true
