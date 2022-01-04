@@ -71,3 +71,8 @@ pre中可以做：参数校验、权限校验、流量监控、日志输出、�
 post中可以做：响应内容响应头修改、日志输出、流量监控等等  
 #### gateway+ribbon 实现负载均衡策略切换 健康检查
 > 参考博客 https://blog.csdn.net/qq_39415129/article/details/106097496
+#### GateWay中的Filter  
+> 生命周期：pre和post  
+> 种类： GatewayFilter（31种）和GlobalFilter（10种），自定义全局的filter需要实现GlobalFilter,Ordered   
+>> GlobalFilter接口中含有filter(ServerWebExchange exchange, GatewayFilterChain chain)方法 exchange请求对象，chain.filter(exchange)放行  
+>> Ordered 返回一个整数表示加载的优先级，整数小优先级越大  
