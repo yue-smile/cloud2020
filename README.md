@@ -56,4 +56,17 @@ One demo of springcloud
 ### 服务监控
 > hystrixDashboard 需要新建一个工程 增加注解@EnableHystrixDashboard   
 > 被监控端需要@EnableCircuitBreaker 另外为了处理兼容性问题需要覆盖一个实例 ServletRegistrationBean  
-> 监控地址是 http://127.0.0.1:8001/hystrix.stream 七色一圈一线 七色代表七种状态 一圈代表流量及状态  
+> 监控地址是 http://127.0.0.1:8001/hystrix.stream 七色一圈一线 七色代表七种状态 一圈代表流量及状态   
+## 微服务网关
+### zuul  
+>  zuul1.0网飞公司内部分歧已弃用，不支持非阻塞IO，基于servlet2.X。基于servlet之上的一个阻塞式处理模型，即实现了处理所有请求的servlet（DispatcherServlet）并由该servlet阻塞式处理。
+>  zuul2.0出来太慢
+### gateway 新一代网关  
+>  由springcloud开发，建立在SpringFramework5.0/ProjectReactor/SpringBoot2之上，webflux框架，使用非阻塞API，支持websocket长连接。底层是webflux+netty  
+>  1 Route 路由：构建网关的基本模块，由ID、目标URI、一系列的断言和过滤器组成，如果断言为true则匹配该路由   
+>  2 Predicate 断言：参考Java8的java.util.function.Predicate 开发人员可以匹配HTTP请求中的所有内容（请求头、请求参数、请求体）如果请求与断言匹配则进行路由    
+>  3 Filter 过滤：指的是Spring框架中GatewayFilter的实例，使用过滤器，可以在请求被路由之前或之后对请求进行修改   
+#### 工作流程：客户端向Gateway发出请求。然后在Gateway Handler Mapping中（根据断言）找到与请求相匹配的路由，将其发送到 GateWay Web Handler，Handler再通过指定的过滤器链来将我们的实际服务执行业务逻辑，然后返回。过滤器之间用虚线分开是因为过滤器可能会在发送代理请求之前（pre）或之后（post）执行业务逻辑   
+pre中可以做：参数校验、权限校验、流量监控、日志输出、协议转换等等  
+post中可以做：响应内容响应头修改、日志输出、流量监控等等  
+
