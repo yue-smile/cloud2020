@@ -69,4 +69,5 @@ One demo of springcloud
 #### 工作流程：客户端向Gateway发出请求。然后在Gateway Handler Mapping中（根据断言）找到与请求相匹配的路由，将其发送到 GateWay Web Handler，Handler再通过指定的过滤器链来将我们的实际服务执行业务逻辑，然后返回。过滤器之间用虚线分开是因为过滤器可能会在发送代理请求之前（pre）或之后（post）执行业务逻辑   
 pre中可以做：参数校验、权限校验、流量监控、日志输出、协议转换等等  
 post中可以做：响应内容响应头修改、日志输出、流量监控等等  
-
+#### gateway+ribbon 实现负载均衡策略切换 健康检查
+> 参考博客 https://blog.csdn.net/qq_39415129/article/details/106097496
