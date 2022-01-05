@@ -76,3 +76,13 @@ post中可以做：响应内容响应头修改、日志输出、流量监控等�
 > 种类： GatewayFilter（31种）和GlobalFilter（10种），自定义全局的filter需要实现GlobalFilter,Ordered   
 >> GlobalFilter接口中含有filter(ServerWebExchange exchange, GatewayFilterChain chain)方法 exchange请求对象，chain.filter(exchange)放行  
 >> Ordered 返回一个整数表示加载的优先级，整数小优先级越大  
+## 配置中心
+### springCloud Config
+## 消息总线
+### springCloud Bus  
+> 目前只支持 rabbitMQ（https://www.rabbitmq.com/getstarted.html） 和 kafuka  
+> rabbitmq  erlang 网页端管理插件 rabbitmq-plugins enable rabbitmq_management  
+> 与config集成，由configCenter负责通知其他微服务，configCenter需要暴露bus-refresh，每次有文件更新，只需要post通知配置中心，由配置中心分发消息  curl -X POST "http://localhost:3344/actuator/bus-refresh"  
+> ConfigClient实例都监听同一个topic（默认是springCloudBus）当服务刷新数据时，它会把这个消息放入topic中，这样其他监听同一个topic的服务就能得到通知，然后去更新自身配置  
+> 全局通知 curl -X POST "http://localhost:3344/actuator/bus-refresh"  
+> 定点通知 curl -X POST "http://localhost:3344/actuator/bus-refresh/{destination}"  
