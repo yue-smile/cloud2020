@@ -86,3 +86,10 @@ post中可以做：响应内容响应头修改、日志输出、流量监控等�
 > ConfigClient实例都监听同一个topic（默认是springCloudBus）当服务刷新数据时，它会把这个消息放入topic中，这样其他监听同一个topic的服务就能得到通知，然后去更新自身配置  
 > 全局通知 curl -X POST "http://localhost:3344/actuator/bus-refresh"  
 > 定点通知 curl -X POST "http://localhost:3344/actuator/bus-refresh/{destination}"  
+## cloud Stream（rabbitMQ和kafka）
+>  屏蔽底层消息中间件的差异，降低切换成本，统一消息的编程模型  
+>  应用程序通过inputs或者outputs来与SpringcloudStream中的binder对象交互  
+>  定义绑定器Binder作为中间层，实现了应用程序与消息中间件细节之间的隔离 生产者input  消费者output  
+>  Stream中的消息通信方式遵循了发布-订阅模式  topic主题进行广播  对应 rabbitmq中的exchange kafka中的topic
+>>  消息生产者类注解 @EnableBinding(Source.class) 注入org.springframework.messaging.MessageChannel通道对象，用于消息发送  
+>>  消息消费者类注解 @EnableBinding(Sink.class) 监听方法上注解 @StreamListener(Sink.INPUT) 输入参数有 org.springframework.messaging.Message对象，用于消息接收
