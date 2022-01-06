@@ -1,0 +1,18 @@
+server:
+  port: 88
+spring:
+  application:
+    name: nacos-payment-consumer
+  cloud:
+    nacos:
+      discorvey:
+        server-addr: localhost:8848
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+serverurl:
+  provider-service: http://nacos-payment-provider
+
