@@ -1,4 +1,4 @@
-package com.wangyue.springcloud.listener;
+package com.wangyue.springcloud.controller;
 
 import org.springframework.cloud.stream.annotation.Input;
 import org.springframework.messaging.SubscribableChannel;

@@ -1,4 +1,4 @@
-package com.wangyue.springcloud.listener;
+package com.wangyue.springcloud.controller;
 
 import com.wangyue.springcloud.entities.CommonResult;
 import com.wangyue.springcloud.entities.Payment;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @Slf4j
@@ -38,6 +39,12 @@ public class PaymentController {
 
     @GetMapping(value = "payment/get/{id}")
     public CommonResult getPaymentById(@PathVariable("id")Long id){
+        try {
+            //演示超时
+            TimeUnit.SECONDS.sleep(3);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         Payment payment = paymentService.getPaymentById(id);
         log.info("插入结果");
         if(payment!=null){
@@ -48,7 +55,7 @@ public class PaymentController {
 
     @GetMapping(value = "payment/discovery")
     public CommonResult discovery(){
-        List<String> services =  discoveryClient.getServices();
+       List<String> services =  discoveryClient.getServices();
         for (String record:services) {
             log.info(">>>>>>>>>>"+record);
         }
@@ -59,5 +66,4 @@ public class PaymentController {
         return new CommonResult(200,"查询成功 端口号为"+ serverProt,services);
 
     }
-
 }

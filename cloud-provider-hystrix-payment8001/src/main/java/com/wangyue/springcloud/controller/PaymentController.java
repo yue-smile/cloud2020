@@ -1,4 +1,4 @@
-package com.wangyue.springcloud.listener;
+package com.wangyue.springcloud.controller;
 
 import com.wangyue.springcloud.service.PaymentService;
 import lombok.extern.slf4j.Slf4j;

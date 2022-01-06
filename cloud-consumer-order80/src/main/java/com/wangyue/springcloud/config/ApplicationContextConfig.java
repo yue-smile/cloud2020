@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 public class ApplicationContextConfig {
 
     @Bean
-    //@LoadBalanced    //赋予restTemplate负载均衡能力 默认轮训
+    @LoadBalanced    //赋予restTemplate负载均衡能力 默认轮训
     public RestTemplate getRestTemplate(){
         return new RestTemplate();
     }
