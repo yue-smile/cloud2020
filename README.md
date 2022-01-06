@@ -100,3 +100,9 @@ post中可以做：响应内容响应头修改、日志输出、流量监控等�
 > Sleuth负责监控、zipkin负责展现  https://repo1.maven.org/maven2/io/zipkin/java/zipkin-server/1.20.1/zipkin-server-2.12.9-exec.jar  
 > 安装运行 java -jar zipkin-server-2.12.9-exec.jar  http://localhost:9411/zipkin/
 > pom引入spring-cloud-starter-zipkin  yml配置zipkin路径和sleuth采样率
+# springCloud alibaba 
+## nacos 注册中心、配置中心、服务总线
+>  Consistency  一致性  
+>  Availability  可用性
+>  Partition tolerance  分区容错性（一定存在）  
+>  nacos可在AP和CP中进行切换
