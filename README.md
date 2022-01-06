@@ -102,7 +102,13 @@ post中可以做：响应内容响应头修改、日志输出、流量监控等�
 > pom引入spring-cloud-starter-zipkin  yml配置zipkin路径和sleuth采样率
 # springCloud alibaba 
 ## nacos 注册中心、配置中心、服务总线
->  Consistency  一致性  
->  Availability  可用性
+### 注册中心  discorvey  
+>  Consistency  一致性  所有节点在同一时间看到的数据都是一致的  
+>  Availability  可用性  所有的请求都会收到响应  
 >  Partition tolerance  分区容错性（一定存在）  
->  nacos可在AP和CP中进行切换
+>  nacos可在AP和CP中进行切换  curl -X PUT "ip:8848/nacos/v1/ns/operator/switches?entry=serverMode&value=CP" 
+>  安装启动nacos即可使用 pom spring-cloud-starter-alibaba-nacos-discovery yml spring.cloud.nacos.discorvey.server-addr: localhost:8848 
+###  配置中心  config  
+>  pom spring-cloud-starter-alibaba-nacos-config  
+>  yml spring.cloud.nacos.config.server-addr: localhost:8848和file-extension    
+>  管理台文件名 ${spring.application.name}-${spring.profile.active}.${spring.cloud.nacos.config.file-extension}  
