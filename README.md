@@ -112,3 +112,6 @@ post中可以做：响应内容响应头修改、日志输出、流量监控等�
 >  pom spring-cloud-starter-alibaba-nacos-config  
 >  yml spring.cloud.nacos.config.server-addr: localhost:8848和file-extension    
 >  管理台文件名 ${spring.application.name}-${spring.profile.active}.${spring.cloud.nacos.config.file-extension}  
+### nacos集群和持久化
+> nacos内嵌derby数据库，目前可兼容mysql数据库，在application.properties中修改，配置连接信息
+> 集群至少三台，配置cluster.conf 集群上层用nginx代理，nginx配置upstream  proxy_pass
