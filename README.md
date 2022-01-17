@@ -139,4 +139,5 @@ post中可以做：响应内容响应头修改、日志输出、流量监控等�
 注意异常降级仅针对业务异常，对 Sentinel 限流降级本身的异常（BlockException）不生效。为了统计异常比例或异常数，需要通过 Tracer.trace(ex) 记录业务异常。开源整合模块，如 Sentinel Dubbo Adapter, Sentinel Web Servlet Filter 或 @SentinelResource 注解会自动统计业务异常，无需手动调用。  
 ### 热点参数限流
 >  从 @HystrixCommand 到 @SentinelResource
+>  @SentinelResource 中fallback注意默认为本类的方法，参数需要一致
 
