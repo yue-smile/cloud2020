@@ -8,11 +8,11 @@ One demo of springcloud
 > zookeeper  
 > consul
 ## 服务调用
-> ribbon 
+> ribbon  config注入restTemplate
 > LoadBalance  负载均衡（客户端负载） 重写负载算法 discoveryClient获取serviceIntance
 ## 服务调用2
 > feign 已弃用
-> open feign 包含ribbon
+> open feign 包含ribbon   形式为 接口+注解
 >> 【超时控制】超时默认1s钟就超时 如果服务端处理超过1秒钟，会导致openfeign客户端直接返回超时报错  
 >>> ribbon.ReadTimeout 指的是建立连接所用的时间，适用于网络状况正常情况下，两端连接所用的时间  
 >>> ribbon.ConnectTimeout 指的是建立连接后从服务器读取到可用资源所用的时间  
@@ -138,6 +138,25 @@ post中可以做：响应内容响应头修改、日志输出、流量监控等�
 #### 注意：
 注意异常降级仅针对业务异常，对 Sentinel 限流降级本身的异常（BlockException）不生效。为了统计异常比例或异常数，需要通过 Tracer.trace(ex) 记录业务异常。开源整合模块，如 Sentinel Dubbo Adapter, Sentinel Web Servlet Filter 或 @SentinelResource 注解会自动统计业务异常，无需手动调用。  
 ### 热点参数限流
->  从 @HystrixCommand 到 @SentinelResource
->  @SentinelResource 中fallback注意默认为本类的方法，参数需要一致
+>  从 @HystrixCommand 到 @SentinelResource  
+>  fallback：失败调用，若本接口出现未知异常，则调用fallback指定的接口  
+>  blockHandler：sentinel定义的失败调用或限制调用，若本次访问被限流或服务降级，则调用blockHandler指定的接口，只管规则不管异常    
+>  @SentinelResource 中 fallback/blockHandler 注意默认为本类的方法，也可指定class，参数需要一致  
+>  可以使用url或者SentinelResource中的value来进行流控，使用url时不会走自定义的兜底方法 
+#### 参数例外项
+>  指的是当参数值为某一特定值的时候，使用例外项中的阀值（vip用户）   
+### 系统自适应限流  
+> Load（仅对 Linux/Unix-like 机器生效）：当系统 load1 超过阈值，且系统当前的并发线程数超过系统容量时才会触发系统保护。系统容量由系统的 maxQps * minRt 计算得出。设定参考值一般是 CPU cores * 2.5  
+> CPU usage（1.5.0+ 版本）：当系统 CPU 使用率超过阈值即触发系统保护（取值范围 0.0-1.0）  
+> RT：(平均处理时间)当单台机器上所有入口流量的平均 RT 达到阈值即触发系统保护，单位是毫秒  
+> 线程数：当单台机器上所有入口流量的并发线程数达到阈值即触发系统保护  
+> 入口 QPS：当单台机器上所有入口流量的 QPS 达到阈值即触发系统保护  
+### sentinel解耦合
+> @SentinelResource  blockHandlerClass属性指定类  blockHandler指定方法  
+> 需要是public static 方法  需要返回类型一致  
+### sentinel持久化
+> 可以持久化进nacos（其他媒介也可以），只要nacos中的数据不删除，流控规则就持续有效  
+> 1 pom引入nacos-datasource  
+> 2 yml-sentinel下配置datasource和dataid等  
+> 3 nacos中新建对应的配置文件
 
