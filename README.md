@@ -80,7 +80,7 @@ post中可以做：响应内容响应头修改、日志输出、流量监控等�
 ### springCloud Config
 ## 消息总线
 ### springCloud Bus  
-> 目前只支持 rabbitMQ（https://www.rabbitmq.com/getstarted.html） 和 kafuka  
+> 目前只支持 [rabbitMQ]（https://www.rabbitmq.com/getstarted.html） 和 kafuka  
 > rabbitmq  erlang 网页端管理插件 rabbitmq-plugins enable rabbitmq_management  
 > 与config集成，由configCenter负责通知其他微服务，configCenter需要暴露bus-refresh，每次有文件更新，只需要post通知配置中心，由配置中心分发消息  curl -X POST "http://localhost:3344/actuator/bus-refresh"  
 > ConfigClient实例都监听同一个topic（默认是springCloudBus）当服务刷新数据时，它会把这个消息放入topic中，这样其他监听同一个topic的服务就能得到通知，然后去更新自身配置  
@@ -112,3 +112,32 @@ post中可以做：响应内容响应头修改、日志输出、流量监控等�
 >  pom spring-cloud-starter-alibaba-nacos-config  
 >  yml spring.cloud.nacos.config.server-addr: localhost:8848和file-extension    
 >  管理台文件名 ${spring.application.name}-${spring.profile.active}.${spring.cloud.nacos.config.file-extension}  
+### nacos集群和持久化
+> nacos内嵌derby数据库，目前可兼容mysql数据库，在application.properties中修改，配置连接信息
+> 集群至少三台，配置cluster.conf 集群上层用nginx代理，nginx配置upstream  proxy_pass
+## Sentinel
+> 1 单独一个组件，可以独立出来 2 直接界面化的细粒度统一配置，少写代码   
+> pom引入spring-cloud-starter-alibaba-sentinel sentinel-core sentinel-datasource-nacos  
+> yml配置spring.cloud.sentinel.transport.dashboard  
+> sentinel使用懒加载机制，注册之后，需要先访问几次
+### 流控规则（默认直接-快速失败）   
+> 阀值类型：①QPS（每秒请求数）  ②线程数（处理请求的线程数）  
+> 流控模式：①直接  ②关联（当指定关联的资源达到阀值时，就限流自己）  ③链路（只记录指定链路上的流量，指定资源从入口进来的流量，如果达到阀值就进行限流，api级别）  
+> 流控效果：①快速失败 ②WarmUp(预热机制) ③排队 严格控制请求通过的间隔时间，也即是让请求以均匀的速度通过，对应的是漏桶算法，不支持QPS大于1000的情况    
+> warmup公式：阀值除以冷加载因子coldFactor（默认值3），经过预热时长（秒）后才会达到阀值，即请求QPS从threshold/3开始，经预热时长逐渐升至设定的QPS阀值。应用于冷启动，慢慢达到峰值。即动态QPS阀值  
+### 降级规则 1.8以后有半开状态
+#### RT(平均响应时间 秒)1.8以后记作慢调用比例
+>  平均响应时间 超出阀值 且 在时间窗口内通过的请求数>=5  触发降级
+>  窗口期过后关闭断路器
+>  RT最大为4900秒 （更大需要通过 -Dcsp.sentinel.statistic.max.rt=XXXXX才能生效）
+>  (1.8以后还需设定慢调用数量)选择以慢调用比例作为阈值，需要设置允许的慢调用 RT（即最大的响应时间），请求的响应时间大于该值则统计为慢调用。当单位统计时长（statIntervalMs）内请求数目大于设置的最小请求数目，并且慢调用的比例大于阈值，则接下来的熔断时长内请求会自动被熔断。经过熔断时长后熔断器会进入探测恢复状态（HALF-OPEN 状态），若接下来的一个请求响应时间小于设置的慢调用 RT 则结束熔断，若大于设置的慢调用 RT 则会再次被熔断。
+#### 异常比例
+>  QPS>=5 且异常比例超过阀值时触发降级；时间窗口期结束后，关闭降级
+#### 异常数 
+>  当单位统计时长内的异常数目超过阈值之后会自动进行熔断。经过熔断时长后熔断器会进入探测恢复状态（HALF-OPEN 状态），若接下来的一个请求成功完成（没有错误）则结束熔断，否则会再次被熔断。
+#### 注意：
+注意异常降级仅针对业务异常，对 Sentinel 限流降级本身的异常（BlockException）不生效。为了统计异常比例或异常数，需要通过 Tracer.trace(ex) 记录业务异常。开源整合模块，如 Sentinel Dubbo Adapter, Sentinel Web Servlet Filter 或 @SentinelResource 注解会自动统计业务异常，无需手动调用。  
+### 热点参数限流
+>  从 @HystrixCommand 到 @SentinelResource
+>  @SentinelResource 中fallback注意默认为本类的方法，参数需要一致
+
