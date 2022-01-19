@@ -168,6 +168,10 @@ post中可以做：响应内容响应头修改、日志输出、流量监控等�
 >  RM (Resource Manager) - 资源管理器  
 >  
 >  管理分支事务处理的资源，与TC交谈以注册分支事务和报告分支事务的状态，并驱动分支事务提交或回滚  
->  [分布式事务 Seata 的AT、Saga和TCC模式] (https://blog.csdn.net/k6T9Q8XKs6iIkZPPIFq/article/details/107273472)  
->  
+>  [分布式事务 Seata 的AT、Saga和TCC模式] (https://blog.csdn.net/k6T9Q8XKs6iIkZPPIFq/article/details/107273472) 
+### seata安装  
+>  服务端下载解压  file.conf 修改事务日志存储到mysql  register.conf注册到nacos  py推送配置的到nacos  
+>  {1.4.1版本使用参考}(https://blog.csdn.net/c_z_z/article/details/117933648) 
+
+
 
