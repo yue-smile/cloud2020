@@ -171,7 +171,9 @@ post中可以做：响应内容响应头修改、日志输出、流量监控等�
 >  [分布式事务 Seata 的AT、Saga和TCC模式] (https://blog.csdn.net/k6T9Q8XKs6iIkZPPIFq/article/details/107273472) 
 ### seata安装  
 >  服务端下载解压  file.conf 修改事务日志存储到mysql  register.conf注册到nacos  py推送配置的到nacos  
->  {1.4.1版本使用参考}(https://blog.csdn.net/c_z_z/article/details/117933648) 
-
+>  .\seata-server.bat -p 8091 -h 127.0.0.1 -m db  
+>  [1.4.1版本使用参考](https://blog.csdn.net/c_z_z/article/details/117933648) 
+### seata小结
+> TC为服务端，TM开启全局事务并向TC中注册，拿到一个XID在全局传输，RM为子业务系统资源控制器会生成前置镜像和后置镜像存在undo_log表用于回滚操作，回滚时会对比后置镜像与当前数据是否一致，不一致需要人工介入。ABA问题，一般采用版本号（日志记录）来解决
 
 
